@@ -115,9 +115,9 @@ get_output() {
     status_line="$(format_status "$git_status")"
 
     if [ "$DISPLAY_STATUS" == 'false' ]; then
-        echo "$status_line ${CORE_ICONS[diff]} $branch"
+        printf '%s' "$status_line ${CORE_ICONS[diff]} $branch"
     else
-        echo "${CORE_ICONS[diff]} $branch"
+        printf '%s' "${CORE_ICONS[diff]} $branch"
     fi
 }
 
