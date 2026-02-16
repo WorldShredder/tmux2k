@@ -194,10 +194,57 @@ Show the number of running Docker containers, with support for filtering by grep
 Show Git branch and status information
 
 - `tmux2k-git-display-status`: Control git status display, default: `false`
+- <details><summary><code>tmux2k-git-status-filter</code>: Ordered list of status prefixes to display, default: <code>AMURDX</code></summary><br>
+
+    | Prefix | Description
+    | ------ | -----------
+    | A | New indexed files
+    | D | Deleted files
+    | M | Modified files
+    | U | Updated/unmerged files
+    | R | Renamed files; corresponds to `R`, `C` and `T`
+    | X | Unindexed files; corresponds to `??`
+    | I | Ignored files; corresponds to `!!`
+
+</details>
+
+- `tmux2k-git-merge-modified`: Merge *R* and *T* statuses into *M* status, default: `false`
+
+##### Default Icon Set Options:
+
+- <details><summary><code>tmux2k-git-icon-scheme</code>: Status icon set, default: <code>default</code></summary><br>
+
+    | Scheme       | A | D | M | U | R | X | I
+    | ------------ | - | - | - | - | - | - | -
+    | default      |  |  |  |  |  |  |  
+    | simple       |  |  |  |  |  |  | 󱈸 
+    | files        | 󰻭 | 󱪢 | 󱇨 | 󰕁 | 󱀱 | 󱀷 | 󰩌 
+    | files-solid  | 󰝒 | 󱪡 | 󱇧 | 󰤘 | 󰪹 | 󰮘 | 󰩋 
+    | prefix       | 󰯫 | 󰯴 | 󰰏 | 󰰧 | 󰰞 | 󰰰 | 󰰃 
+    | prefix-solid | 󰬈 | 󰬋 | 󰬔 | 󰬜 | 󰬙 | 󰬟 | 󰬐 
+
+</details>
+
+- <details><summary><code>tmux2k-git-core-icon-scheme</code>: Core icon set, default: <code>default</code></summary><br>
+
+    | Scheme       | Repo | Diff | No Repo 
+    | ------------ | ---- | ---- | ------- 
+    | default      |     |     | 
+
+</details>
+
+##### Status Icon Options:
+
 - `tmux2k-git-added-icon`: Icon for added files, default: ``
-- `tmux2k-git-modified-icon`: Icon for modified files, default: ``
-- `tmux2k-git-updated-icon`: Icon for updated files, default: ``
 - `tmux2k-git-deleted-icon`: Icon for deleted files, default: ``
+- `tmux2k-git-modified-icon`: Icon for modified files, default: ``
+- `tmux2k-git-updated-icon`: Icon for updated files, default: ``
+- `tmux2k-git-renamed-icon`: Icon for renamed files, default: ``
+- `tmux2k-git-untracked-icon`: Icon for untracked files, default: ``
+- `tmux2k-git-ignored-icon`: Icon for ignored files, default: ``
+
+##### Core Icon Options:
+
 - `tmux2k-git-repo-icon`: Icon for repository, default: ``
 - `tmux2k-git-diff-icon`: Icon for differences, default: ``
 - `tmux2k-git-no-repo-icon`: Icon for no repository, default: ``
