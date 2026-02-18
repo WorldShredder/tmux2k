@@ -163,7 +163,41 @@ Show battery stats and percentage
 Show CPU usage information
 
 - `tmux2k-cpu-icon`: Icon for CPU usage, default: ``
-- `tmux2k-cpu-display-load`: Control CPU load display, default: `false`
+- <details><summary><code>tmux2k-cpu-display-load</code>: Display CPU load averages, default: <code>false</code></summary><br>
+    
+    Displays CPU load averages given by `uptime`, each representing the average number of processes using or waiting to use CPU time over _1_, _5_ and _15_ minutes.
+    
+</details>
+
+##### CPU Usage Options
+
+- `tmux2k-cpu-show-decimal`: Display usage with decimal accuracy, default: `true`
+
+##### CPU Load Options
+
+- `tmux2k-cpu-load-percent`: Display load averages as percentages, default: `true`
+- <details><summary><code>tmux2k-cpu-load-normalize</code>: Normalize CPU load averages, default: <code>true</code></summary><br>
+    
+    When this option is `true`, each load average provided by `uptime` is divided by the number of logical cores on the system to give a more identifiable reading.
+    
+    **`uptime` manpage**
+    > Load averages are not normalized for the number of CPUs in a system, so a load average of 1 means a single CPU system is loaded all the time while on a 4 CPU system it means it was idle 75% of the time.
+
+</details>
+
+- <details><summary><code>tmux2k-cpu-load-averages</code>: CPU load averages to display, default: <code>1m 5m 15m</code></summary><br>
+    
+    The `uptime` command provides averages at _1_, _5_ and _15_ minute intervals. You can define which of the three intervals to display by passing them as a space-separated list.
+    
+    For example, passing `1m 15m` will display the _1_ and _15_ minute CPU load averages.
+    
+    | Interval | Outputs
+    | -------- | -------
+    | `1m`     | Display load average taken over 1 minute.
+    | `5m`     | Display load average taken over 5 minutes.
+    | `15m`    | Display load average taken over 15 minutes.
+    
+</details>
 
 #### `cpu-temp`
 
