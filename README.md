@@ -160,44 +160,122 @@ Show battery stats and percentage
 
 #### `cpu`
 
-Show CPU usage information
+Show CPU usage and load information
 
 - `tmux2k-cpu-icon`: Icon for CPU usage, default: ``
-- <details><summary><code>tmux2k-cpu-display-load</code>: Display CPU load averages, default: <code>false</code></summary><br>
-    
-    Displays CPU load averages given by `uptime`, each representing the average number of processes using or waiting to use CPU time over _1_, _5_ and _15_ minutes.
-    
-</details>
 
-##### CPU Usage Options
+- ##### CPU Usage Options
+    
+    - `tmux2k-cpu-display-usage`: Display CPU usage percentage, default: `true`
+    - `tmux2k-cpu-show-decimal`: Display usage with decimal accuracy, default: `true`
 
-- `tmux2k-cpu-show-decimal`: Display usage with decimal accuracy, default: `true`
+- ##### CPU Load Options
+    
+    - <details><summary><code>tmux2k-cpu-display-load</code>: Display CPU load averages, default: <code>false</code></summary><br>
+        
+        Displays CPU load averages given by `uptime`, each representing the average number of processes using or waiting to use CPU time over _1_, _5_ and _15_ minutes.
+        
+    </details>
+    
+    - `tmux2k-cpu-load-percent`: Display load averages as percentages, default: `true`
+    - <details><summary><code>tmux2k-cpu-load-normalize</code>: Normalize CPU load averages, default: <code>true</code></summary><br>
+        
+        When this option is `true`, each load average provided by `uptime` is divided by the number of logical cores on the system to give a more identifiable reading.
+        
+        **`uptime` manpage**
+        > Load averages are not normalized for the number of CPUs in a system, so a load average of 1 means a single CPU system is loaded all the time while on a 4 CPU system it means it was idle 75% of the time.
+    
+    </details>
+    
+    - <details><summary><code>tmux2k-cpu-load-averages</code>: CPU load averages to display, default: <code>1m 5m 15m</code></summary><br>
+        
+        The `uptime` command provides averages at _1_, _5_ and _15_ minute intervals. You can define which of the three intervals to display by passing them as a space-separated list.
+        
+        For example, passing `1m 15m` will display the _1_ and _15_ minute CPU load averages.
+        
+        | Interval | Outputs
+        | -------- | -------
+        | `1m`     | Display load average taken over 1 minute.
+        | `5m`     | Display load average taken over 5 minutes.
+        | `15m`    | Display load average taken over 15 minutes.
+        
+    </details>
 
-##### CPU Load Options
-
-- `tmux2k-cpu-load-percent`: Display load averages as percentages, default: `true`
-- <details><summary><code>tmux2k-cpu-load-normalize</code>: Normalize CPU load averages, default: <code>true</code></summary><br>
+- ##### Dynamic Color Options
     
-    When this option is `true`, each load average provided by `uptime` is divided by the number of logical cores on the system to give a more identifiable reading.
+    - <details><summary><code>tmux2k-cpu-gradient</code>: List of hex colors or a named gradient for dynamic color display, default: <em>empty</em></summary><br>
+        
+        A space-separated list of hex colors which define a gradient or the name of a predefined gradient. This gradient is applied to the CPU plugin's output value(s), while the gradient length determines the percentage-range of each color.
+        
+        ##### Named Gradients
+        
+        > <picture>
+        >   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Mqxx/GitHub-Markdown/main/blockquotes/badge/light-theme/note.svg">
+        >   <img alt="Note" src="https://raw.githubusercontent.com/Mqxx/GitHub-Markdown/main/blockquotes/badge/dark-theme/note.svg">
+        > </picture><br>
+        >
+        > - The name of each named gradient is appended with the number of colors, or _fractions_, it represents.
+        > - You can reverse a named gradient by prepending a `!` to the name, e.g.: `!heat4`
+        
+        
+        | Name | RGB Path
+        | ---- | --------
+        | `heat4` | _blue_ **→** _green_ **→** _red_
+        | `cosmic4` | _blue_ **→** _red_
+        | `heat10` | _blue_ **→** _green_ **→** _red_
+        | `cosmic10` | _blue_ **→** _red_
+        
+        ##### Examples
+        
+        ```bash
+        # Color output values using a named gradient
+        set -g '@tmux2k-cpu-gradient' 'heat10'
+        
+        # Or using a reversed named gradient
+        set -g '@tmux2k-cpu-gradient' '!heat10'
+        
+        # Define a three-color gradient  R=0%-32%  G=33%-65%  B=66%-100%
+        set -g '@tmux2k-cpu-gradient'    '#ff0000   #00ff00    #0000ff'
+        ```
+        
+        100-Color Gradient Example (_blue_ **→** _green_ **→** _red_)
+        
+        ```bash
+        set -g @tmux2k-cpu-gradient '#443ccc #3c3ccc #3c43cc #3c4acc #3c52cc #3c59cc #3c60cc #3c67cc #3c6ecc #3c76cc #3c7dcc #3c84cc #3c8bcc #3c8bcc #3c9acc #3ca1cc #3ca8cc #3cafcc #3cb6cc #3cbecc #3cc5cc #3ccccc #3cccc5 #3cccbe #3cccb6 #3cccaf #3ccca8 #3ccca1 #3ccc9a #3ccc92 #3ccc8b #3ccc84 #3ccc7d #3ccc76 #3ccc6e #3ccc67 #3ccc60 #3ccc59 #3ccc52 #3ccc4a #3ccc43 #3ccc3c #43cc3c #4acc3c #52cc3c #59cc3c #5ecc3c #62cc3c #67cc3c #6ccc3c #71cc3c #76cc3c #7acc3c #7fcc3c #84cc3c #89cc3c #8ecc3c #92cc3c #97cc3c #9ccc3c #a1cc3c #a6cc3c #aacc3c #afcc3c #b4cc3c #b9cc3c #becc3c #c2cc3c #c7cc3c #cccc3c #ccc73c #ccc23c #ccbe3c #ccb93c #ccb43c #ccaf3c #ccaa3c #cca63c #cca13c #cc9c3c #cc973c #cc923c #cc8e3c #cc893c #cc843c #cc7f3c #cc7a3c #cc763c #cc713c #cc6c3c #cc673c #cc623c #cc5e3c #cc593c #cc543c #cc4f3c #cc4a3c #cc463c #cc413c #cc3c3c'
+        ```
     
-    **`uptime` manpage**
-    > Load averages are not normalized for the number of CPUs in a system, so a load average of 1 means a single CPU system is loaded all the time while on a 4 CPU system it means it was idle 75% of the time.
-
-</details>
-
-- <details><summary><code>tmux2k-cpu-load-averages</code>: CPU load averages to display, default: <code>1m 5m 15m</code></summary><br>
+    </details>
     
-    The `uptime` command provides averages at _1_, _5_ and _15_ minute intervals. You can define which of the three intervals to display by passing them as a space-separated list.
-    
-    For example, passing `1m 15m` will display the _1_ and _15_ minute CPU load averages.
-    
-    | Interval | Outputs
-    | -------- | -------
-    | `1m`     | Display load average taken over 1 minute.
-    | `5m`     | Display load average taken over 5 minutes.
-    | `15m`    | Display load average taken over 15 minutes.
-    
-</details>
+    - <details><summary><code>tmux2k-cpu-icon-link-to</code>: The property name to link the CPU icon's color to, default: <em>empty</em></summary><br>
+        
+        The color of the CPU icon can be dynamically controlled by linking it to the usage property or one of the load averages (requires `tmux2k-cpu-gradient` to be set).
+        
+        | Property | Description
+        | -------- | -----------
+        | `usage` | Link color to the _usage_ value.
+        | `1m` | Link color to the _1 minute_ load average.
+        | `5m` | Link color to the _5 minute_ load average.
+        | `15m` | Link color to the _15 minute_ load average.
+        
+        ##### Examples
+        
+        ```bash
+        # Link icon color to the usage property
+        set -g '@tmux2k-cpu-icon-link-to' 'usage'
+        
+        # Link icon color to the 1 minute load average
+        set -g '@tmux2k-cpu-icon-link-to' '1m'
+        ```
+        
+        By allowing the icon color to represent a measurement of CPU time or usage, we can meaningfully display the plugin without the value its color represents:
+        
+        ```bash
+        set -g '@tmux2k-cpu-display-usage' 'false'
+        set -g '@tmux2k-cpu-gradient' 'heat10'
+        set -g '@tmux2k-cpu-icon-link-to' 'usage'
+        ```
+        
+    </details>
 
 #### `cpu-temp`
 

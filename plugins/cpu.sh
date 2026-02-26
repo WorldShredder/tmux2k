@@ -5,12 +5,20 @@ export LC_ALL=en_US.UTF-8
 readonly current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$current_dir/../lib/utils.sh"
 
-cpu_display_load="$(get_tmux_option "@tmux2k-cpu-display-load" 'false')"
+cpu_icon="$(get_tmux_option '@tmux2k-cpu-icon' '')"
+cpu_display_load="$(get_tmux_option '@tmux2k-cpu-display-load' 'false')"
+cpu_display_usage="$(get_tmux_option '@tmux2k-cpu-display-usage' 'true')"
+cpu_gradient="$(get_tmux_option '@tmux2k-cpu-gradient' '')"
+cpu_icon_link_to="$(get_tmux_option '@tmux2k-cpu-icon-link-to' '')"
+
+[ -n "$cpu_gradient" ] &&\
+    source "$current_dir/../lib/color-utils.sh"
 
 get_cpu_usage() {
-    local output=''
-    local percent=''
+    local cpu_show_decimal
+    cpu_show_decimal="$(get_tmux_option '@tmux2k-cpu-show-decimal' 'true')"
 
+    local percent=''
     case "$(uname -s)" in
     Linux)
         percent="$(LC_NUMERIC=en_US.UTF-8 top -bn2 -d 0.01 | grep "Cpu(s)" | tail -1 |\
@@ -30,6 +38,15 @@ get_cpu_usage() {
 
     [ -z "$percent" ] &&\
         return
+
+    local output=''
+    if [ -n "$cpu_gradient" ] ; then
+        local color
+        color="$(pct2color "${percent}%" "$cpu_gradient")"
+        output+="#[fg=${color:-default}]"
+        [ "$cpu_icon_link_to" = 'usage' ] &&\
+            tmux set -g '@tmux2k-cpu-linked-color' "$color"
+    fi
 
     if [ "$cpu_show_decimal" = 'true' ] ; then
         output+="$(normalize_padding "${percent}%" 5)"
@@ -63,24 +80,39 @@ float_to_percent() {
 }
 
 get_cpu_load() {
-    declare -a output=()
+    local cpu_load_normalize cpu_load_percent cpu_load_averages
+    cpu_load_normalize="$(get_tmux_option '@tmux2k-cpu-load-normalize' 'true')"
+    cpu_load_percent="$(get_tmux_option '@tmux2k-cpu-load-percent' 'true')"
+    cpu_load_averages=($(get_tmux_option '@tmux2k-cpu-load-averages' '1m 5m 15m'))
 
+    declare -a output=()
     case $(uname -s) in
     Linux | Darwin)
         declare -a loadavg=()
         loadavg+=($(uptime | awk -F'[a-z]:' '{ print $2}' | sed 's/,//g'))
 
-        local i avg
-        declare -a time_win=('1m' '5m' '15m')
-        for ((i = 0; i < "${#time_win[@]}"; i++)); do
-            ! [[ " ${cpu_load_averages[@]} " =~ " ${time_win[$i]} " ]] &&\
+        local i avg interval color
+        declare -a intervals=('1m' '5m' '15m')
+        for ((i = 0; i < "${#intervals[@]}"; i++)); do
+            interval="${intervals[$i]}"
+            ! [[ " ${cpu_load_averages[@]} " =~ " $interval " ]] &&\
                 continue
+
             avg="${loadavg[$i]}"
             [ "$cpu_load_normalize" = 'true' ] &&\
                 avg="$(normalize_load "$avg")"
+
             [ "$cpu_load_percent" = 'true' ] &&\
                 avg="$(float_to_percent "$avg")"
-            output+=("$(normalize_padding "$avg" 4)")
+
+            if [ -n "$cpu_gradient" ] ; then
+                color="$(pct2color "$avg" "$cpu_gradient")"
+                [ "$cpu_icon_link_to" = "$interval" ] &&\
+                    tmux set -g '@tmux2k-cpu-linked-color' "$color"
+                color="#[fg=${color:-default}]"
+            fi
+
+            output+=("${color}$(normalize_padding "$avg" 4)")
         done
         ;;
 
@@ -91,18 +123,39 @@ get_cpu_load() {
 }
 
 main() {
-    if [ "$cpu_display_load" = 'true' ]; then
-        cpu_load_normalize="$(get_tmux_option '@tmux2k-cpu-load-normalize' 'true')"
-        cpu_load_percent="$(get_tmux_option '@tmux2k-cpu-load-percent' 'true')"
-        cpu_load_averages=($(get_tmux_option '@tmux2k-cpu-load-averages' '1m 5m 15m'))
-        get_cpu_load
-    else
-        cpu_icon="$(get_tmux_option '@tmux2k-cpu-icon' '')"
-        cpu_show_decimal="$(get_tmux_option '@tmux2k-cpu-show-decimal' 'true')"
-        local cpu_percent
-        cpu_percent=$(get_cpu_usage)
-        printf '%s' "$cpu_icon $cpu_percent"
+    # Two cases for each mode are defined:
+    # 1) Display icon and  mode value(s)
+    # 2) Display colorized icon only (discard mode output)
+
+    local cpu_usage
+    if [ "$cpu_display_usage" = 'true' ] ; then
+        cpu_usage="$(get_cpu_usage)"
+    elif [ "$cpu_icon_link_to" = 'usage' ] ; then
+        get_cpu_usage &>/dev/null
     fi
+
+    local cpu_load
+    if [ "$cpu_display_load" = 'true' ] ; then
+        cpu_load="$(get_cpu_load)"
+    elif [[ "$cpu_icon_link_to" = *'m' ]] ; then
+        get_cpu_load &>/dev/null
+    fi
+
+    local output=''
+    local cpu_linked_color
+    if [ -z "$cpu_icon_link_to" ] || [ -z "$cpu_gradient" ] ; then
+        # Removes tmux restart requirement on reset
+        tmux set -g '@tmux2k-cpu-linked-color' ''
+    else
+        cpu_linked_color="$(get_tmux_option '@tmux2k-cpu-linked-color' '')"
+        [ -n "$cpu_linked_color" ] &&\
+            output+="#[fg=${cpu_linked_color}]"
+    fi
+
+    for s in "$cpu_icon" "$cpu_usage" "$cpu_load" ; do
+        [ -n "$s" ] && output+="$s "
+    done
+    printf '%s' "${output% *}"
 }
 
 main
