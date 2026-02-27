@@ -49,7 +49,7 @@ get_cpu_usage() {
     fi
 
     if [ "$cpu_show_decimal" = 'true' ] ; then
-        output+="$(normalize_padding "${percent}%" 5)"
+        output+="$(normalize_padding "${percent}%" 6)"
     else
         output+="$(normalize_padding "${percent%.*}%" 4)"
     fi
