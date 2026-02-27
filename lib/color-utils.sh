@@ -39,7 +39,7 @@ pct2color() {
     # Example:
     #  pct2color '66%'      '#0000ff #00ff00 #ff0000' => '#ff0000'
     #  pct2color -r 200 100 '#0000ff #ff0000'         => '#ff0000'
-    #  pct2color 0.25       'heat'                    => heat[6] (#54bd8e)
+    #  pct2color 0.25       'heat'                    => heat[3] (#54bd8e)
     #  pct2color 0.1%       '!heat'                   => heat[9] (#be3136)
 
     local range
