@@ -10,7 +10,7 @@ cpu_display_load="$(get_tmux_option '@tmux2k-cpu-display-load' 'false')"
 cpu_display_usage="$(get_tmux_option '@tmux2k-cpu-display-usage' 'true')"
 cpu_gradient="$(get_tmux_option '@tmux2k-cpu-gradient' '')"
 cpu_icon_link_to="$(get_tmux_option '@tmux2k-cpu-icon-link-to' '')"
-cpu_usage_average="$(get_tmux_option '@tmux2k-cpu-usage-average')"
+cpu_usage_average="$(get_tmux_option '@tmux2k-cpu-usage-average' '0')"
 
 [ -n "$cpu_gradient" ] &&\
     source "$current_dir/../lib/color-utils.sh"
