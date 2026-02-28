@@ -168,6 +168,23 @@ Show CPU usage and load information
     
     - `tmux2k-cpu-display-usage`: Display CPU usage percentage, default: `true`
     - `tmux2k-cpu-show-decimal`: Display usage with decimal accuracy, default: `true`
+    - <details><summary><code>tmux2k-cpu-usage-average</code>: Number of usage values to average, default: <code>0</code></summary><br>
+        
+        Display CPU usage as an average of _n_ values over _s_ seconds, where _n_ is the value given to this option and _s_ the value of `tmux2k-refresh-rate` multiplied by _n_.
+        
+        ##### Example
+        
+        ```bash
+        # Display a 10s avg w/2s refresh rate
+        set -g @tmux2k-refresh-rate 2
+        set -g @tmux2k-cpu-usage-average 5
+
+        # Display a 1m avg w/15s refresh rate
+        set -g @tmux2k-refresh-rate 15
+        set -g @tmux2k-cpu-usage-average 4
+        ```
+        
+    </details>
 
 - ##### CPU Load Options
     
@@ -234,13 +251,13 @@ Show CPU usage and load information
         
         ```bash
         # Color output values using a themed gradient:
-        set -g '@tmux2k-cpu-gradient' 'catppuccin'
+        set -g @tmux2k-cpu-gradient 'catppuccin'
         
         # Use reversed dark variant:
-        set -g '@tmux2k-cpu-gradient' '!catppuccin-dark'
+        set -g @tmux2k-cpu-gradient '!catppuccin-dark'
         
-        # Define a three-color gradient  R=0%-32%  G=33%-65%  B=66%-100%
-        set -g '@tmux2k-cpu-gradient'    '#ff0000   #00ff00    #0000ff'
+        # Define a three-color gradient   R=0-32%   G=33-65%   B=66-100%
+        set -g @tmux2k-cpu-gradient      '#ff0000   #00ff00    #0000ff'
         ```
         
         100 Color Gradient Example (_blue_ **→** _green_ **→** _red_)
@@ -266,18 +283,18 @@ Show CPU usage and load information
         
         ```bash
         # Link icon color to the usage property
-        set -g '@tmux2k-cpu-icon-link-to' 'usage'
+        set -g @tmux2k-cpu-icon-link-to 'usage'
         
         # Link icon color to the 1 minute load average
-        set -g '@tmux2k-cpu-icon-link-to' '1m'
+        set -g @tmux2k-cpu-icon-link-to '1m'
         ```
         
         By allowing the icon color to represent a measurement of CPU time or usage, we can meaningfully display the plugin without the value its color represents:
         
         ```bash
-        set -g '@tmux2k-cpu-display-usage' 'false'
-        set -g '@tmux2k-cpu-gradient' 'onedark'
-        set -g '@tmux2k-cpu-icon-link-to' 'usage'
+        set -g @tmux2k-cpu-display-usage 'false'
+        set -g @tmux2k-cpu-gradient 'onedark'
+        set -g @tmux2k-cpu-icon-link-to 'usage'
         ```
         
     </details>
