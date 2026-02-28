@@ -163,141 +163,133 @@ Show battery stats and percentage
 Show CPU usage and load information
 
 - `tmux2k-cpu-icon`: Icon for CPU usage, default: ``
+- `tmux2k-cpu-display-usage`: Display CPU usage percentage, default: `true`
+- <details><summary><code>tmux2k-cpu-usage-average</code>: Number of usage values to average, default: <code>0</code></summary><br>
+    
+    Display CPU usage as an average of _n_ values over _s_ seconds, where _n_ is the value given to this option and _s_ the value of `tmux2k-refresh-rate` multiplied by _n_.
+    
+    ##### Example
+    
+    ```bash
+    # Display a 10s avg w/2s refresh rate
+    set -g @tmux2k-refresh-rate 2
+    set -g @tmux2k-cpu-usage-average 5
 
-- ##### CPU Usage Options
+    # Display a 1m avg w/15s refresh rate
+    set -g @tmux2k-refresh-rate 15
+    set -g @tmux2k-cpu-usage-average 4
+    ```
     
-    - `tmux2k-cpu-display-usage`: Display CPU usage percentage, default: `true`
-    - `tmux2k-cpu-show-decimal`: Display usage with decimal accuracy, default: `true`
-    - <details><summary><code>tmux2k-cpu-usage-average</code>: Number of usage values to average, default: <code>0</code></summary><br>
-        
-        Display CPU usage as an average of _n_ values over _s_ seconds, where _n_ is the value given to this option and _s_ the value of `tmux2k-refresh-rate` multiplied by _n_.
-        
-        ##### Example
-        
-        ```bash
-        # Display a 10s avg w/2s refresh rate
-        set -g @tmux2k-refresh-rate 2
-        set -g @tmux2k-cpu-usage-average 5
+</details>
 
-        # Display a 1m avg w/15s refresh rate
-        set -g @tmux2k-refresh-rate 15
-        set -g @tmux2k-cpu-usage-average 4
-        ```
-        
-    </details>
+- `tmux2k-cpu-usage-decimal`: Display usage with decimal accuracy, default: `true`
+- <details><summary><code>tmux2k-cpu-display-load</code>: Display CPU load averages, default: <code>false</code></summary><br>
+    
+    Displays CPU load averages given by `uptime`, each representing the average number of processes using or waiting to use CPU time over _1_, _5_ and _15_ minutes.
+    
+</details>
 
-- ##### CPU Load Options
+- `tmux2k-cpu-load-percent`: Display load averages as percentages, default: `true`
+- <details><summary><code>tmux2k-cpu-load-normalize</code>: Normalize CPU load averages, default: <code>true</code></summary><br>
     
-    - <details><summary><code>tmux2k-cpu-display-load</code>: Display CPU load averages, default: <code>false</code></summary><br>
-        
-        Displays CPU load averages given by `uptime`, each representing the average number of processes using or waiting to use CPU time over _1_, _5_ and _15_ minutes.
-        
-    </details>
+    When this option is `true`, each load average provided by `uptime` is divided by the number of logical cores on the system to give a more identifiable reading.
     
-    - `tmux2k-cpu-load-percent`: Display load averages as percentages, default: `true`
-    - <details><summary><code>tmux2k-cpu-load-normalize</code>: Normalize CPU load averages, default: <code>true</code></summary><br>
-        
-        When this option is `true`, each load average provided by `uptime` is divided by the number of logical cores on the system to give a more identifiable reading.
-        
-        **`uptime` manpage**
-        > Load averages are not normalized for the number of CPUs in a system, so a load average of 1 means a single CPU system is loaded all the time while on a 4 CPU system it means it was idle 75% of the time.
-    
-    </details>
-    
-    - <details><summary><code>tmux2k-cpu-load-averages</code>: CPU load averages to display, default: <code>1m 5m 15m</code></summary><br>
-        
-        The `uptime` command provides averages at _1_, _5_ and _15_ minute intervals. You can define which of the three intervals to display by passing them as a space-separated list.
-        
-        For example, passing `1m 15m` will display the _1_ and _15_ minute CPU load averages.
-        
-        | Interval | Outputs
-        | -------- | -------
-        | `1m`     | Display load average taken over 1 minute.
-        | `5m`     | Display load average taken over 5 minutes.
-        | `15m`    | Display load average taken over 15 minutes.
-        
-    </details>
+    **`uptime` manpage**
+    > Load averages are not normalized for the number of CPUs in a system, so a load average of 1 means a single CPU system is loaded all the time while on a 4 CPU system it means it was idle 75% of the time.
 
-- ##### Dynamic Color Options
+</details>
+
+- <details><summary><code>tmux2k-cpu-load-averages</code>: CPU load averages to display, default: <code>1m 5m 15m</code></summary><br>
     
-    - <details><summary><code>tmux2k-cpu-gradient</code>: List of hex colors or a named gradient for dynamic color display, default: <em>empty</em></summary><br>
-        
-        This gradient is applied to the CPU plugin's output values, and optionally, its icon if `tmux2k-cpu-icon-link-to` is set.
-        
-        ![](./images/cpu-gradient-example.jpg)
-        
-        Each color in the gradient represents a percentage range, where each range is determined by the gradient's length, and the _value color_ is determined by which range the value falls into. This means that, given a 5-color gradient (5 ranges of 20%), a value of `25%` or `0.25` would apply color **2** of **5**.
-        
-        ##### Named Gradients
-        
-        > <picture>
-        >   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Mqxx/GitHub-Markdown/main/blockquotes/badge/light-theme/note.svg">
-        >   <img alt="Note" src="https://raw.githubusercontent.com/Mqxx/GitHub-Markdown/main/blockquotes/badge/dark-theme/note.svg">
-        > </picture><br>
-        >
-        > Gradient colors can be reversed by prepending a `!` to the gradient name, e.g.: `!gruvbox`
-        
-        
-        | Gradient | Colors
-        | -------- | ------
-        | `catppuccin` \| `catppuccin-dark` | ![](https://placehold.co/5x15/8aadf4/8aadf4/png)![](https://placehold.co/5x15/a6da95/a6da95/png)![](https://placehold.co/5x15/eed49f/eed49f/png)![](https://placehold.co/5x15/f5a97f/f5a97f/png)![](https://placehold.co/5x15/ed8796/ed8796/png)   ![](https://placehold.co/5x15/405580/405580/png)![](https://placehold.co/5x15/4c6e42/4c6e42/png)![](https://placehold.co/5x15/a68137/a68137/png)![](https://placehold.co/5x15/c26a3a/c26a3a/png)![](https://placehold.co/5x15/a63a4a/a63a4a/png)
-        | `gruvbox` \| `gruvbox-dark` | ![](https://placehold.co/5x15/458588/458588/png)![](https://placehold.co/5x15/98971a/98971a/png)![](https://placehold.co/5x15/fabd2f/fabd2f/png)![](https://placehold.co/5x15/d79921/d79921/png)![](https://placehold.co/5x15/cc241d/cc241d/png)   ![](https://placehold.co/5x15/3c6466/3c6466/png)![](https://placehold.co/5x15/66651f/66651f/png)![](https://placehold.co/5x15/8f692e/8f692e/png)![](https://placehold.co/5x15/9e5b38/9e5b38/png)![](https://placehold.co/5x15/9e3838/9e3838/png)
-        | `monokai` \| `monokai-dark` | ![](https://placehold.co/5x15/66d9ef/66d9ef/png)![](https://placehold.co/5x15/a6e22e/a6e22e/png)![](https://placehold.co/5x15/e6db74/e6db74/png)![](https://placehold.co/5x15/ffa07a/ffa07a/png)![](https://placehold.co/5x15/f92672/f92672/png)   ![](https://placehold.co/5x15/2d6773/2d6773/png)![](https://placehold.co/5x15/5c7330/5c7330/png)![](https://placehold.co/5x15/736a1d/736a1d/png)![](https://placehold.co/5x15/99542c/99542c/png)![](https://placehold.co/5x15/a6305c/a6305c/png)
-        | `onedark` \| `onedark-dark` | ![](https://placehold.co/5x15/61afef/61afef/png)![](https://placehold.co/5x15/98c379/98c379/png)![](https://placehold.co/5x15/e5c07b/e5c07b/png)![](https://placehold.co/5x15/ffa07a/ffa07a/png)![](https://placehold.co/5x15/e06c75/e06c75/png)   ![](https://placehold.co/5x15/345d80/345d80/png)![](https://placehold.co/5x15/506e3c/506e3c/png)![](https://placehold.co/5x15/7a602c/7a602c/png)![](https://placehold.co/5x15/874b34/874b34/png)![](https://placehold.co/5x15/8a3339/8a3339/png)
-        | `heat` \| `heat-dark` | ![](https://placehold.co/5x15/6673bc/6673bc/png)![](https://placehold.co/5x15/5da9bc/5da9bc/png)![](https://placehold.co/5x15/54bd8e/54bd8e/png)![](https://placehold.co/5x15/56bd4c/56bd4c/png)![](https://placehold.co/5x15/78bd47/78bd47/png)![](https://placehold.co/5x15/9ebd43/9ebd43/png)![](https://placehold.co/5x15/beb53e/beb53e/png)![](https://placehold.co/5x15/be8b3a/be8b3a/png)![](https://placehold.co/5x15/be5d35/be5d35/png)![](https://placehold.co/5x15/be3136/be3136/png)   ![](https://placehold.co/5x15/454e80/454e80/png)![](https://placehold.co/5x15/3f7380/3f7380/png)![](https://placehold.co/5x15/387d5e/387d5e/png)![](https://placehold.co/5x15/3a8033/3a8033/png)![](https://placehold.co/5x15/518030/518030/png)![](https://placehold.co/5x15/6b802d/6b802d/png)![](https://placehold.co/5x15/80781c/80781c/png)![](https://placehold.co/5x15/8c611d/8c611d/png)![](https://placehold.co/5x15/8a3f20/8a3f20/png)![](https://placehold.co/5x15/8c161b/8c161b/png)
-        | `cosmic` \| `cosmic-dark` | ![](https://placehold.co/5x15/6673bc/6673bc/png)![](https://placehold.co/5x15/705dbc/705dbc/png)![](https://placehold.co/5x15/8e54bd/8e54bd/png)![](https://placehold.co/5x15/b24cbd/b24cbd/png)![](https://placehold.co/5x15/bd47b3/bd47b3/png)![](https://placehold.co/5x15/bd439e/bd439e/png)![](https://placehold.co/5x15/be3e86/be3e86/png)![](https://placehold.co/5x15/be3a6d/be3a6d/png)![](https://placehold.co/5x15/be3552/be3552/png)![](https://placehold.co/5x15/be3136/be3136/png)   ![](https://placehold.co/5x15/454e80/454e80/png)![](https://placehold.co/5x15/4c3f80/4c3f80/png)![](https://placehold.co/5x15/603980/603980/png)![](https://placehold.co/5x15/783380/783380/png)![](https://placehold.co/5x15/803079/803079/png)![](https://placehold.co/5x15/802d6b/802d6b/png)![](https://placehold.co/5x15/802a5a/802a5a/png)![](https://placehold.co/5x15/802749/802749/png)![](https://placehold.co/5x15/802437/802437/png)![](https://placehold.co/5x15/802124/802124/png)
-        
-        ##### Examples
-        
-        ```bash
-        # Color output values using a themed gradient:
-        set -g @tmux2k-cpu-gradient 'catppuccin'
-        
-        # Use reversed dark variant:
-        set -g @tmux2k-cpu-gradient '!catppuccin-dark'
-        
-        # Define a three-color gradient   R=0-32%   G=33-65%   B=66-100%
-        set -g @tmux2k-cpu-gradient      '#ff0000   #00ff00    #0000ff'
-        ```
-        
-        100 Color Gradient Example (_blue_ **→** _green_ **→** _red_)
-        
-        ```bash
-        set -g @tmux2k-cpu-gradient '#443ccc #3c3ccc #3c43cc #3c4acc #3c52cc #3c59cc #3c60cc #3c67cc #3c6ecc #3c76cc #3c7dcc #3c84cc #3c8bcc #3c8bcc #3c9acc #3ca1cc #3ca8cc #3cafcc #3cb6cc #3cbecc #3cc5cc #3ccccc #3cccc5 #3cccbe #3cccb6 #3cccaf #3ccca8 #3ccca1 #3ccc9a #3ccc92 #3ccc8b #3ccc84 #3ccc7d #3ccc76 #3ccc6e #3ccc67 #3ccc60 #3ccc59 #3ccc52 #3ccc4a #3ccc43 #3ccc3c #43cc3c #4acc3c #52cc3c #59cc3c #5ecc3c #62cc3c #67cc3c #6ccc3c #71cc3c #76cc3c #7acc3c #7fcc3c #84cc3c #89cc3c #8ecc3c #92cc3c #97cc3c #9ccc3c #a1cc3c #a6cc3c #aacc3c #afcc3c #b4cc3c #b9cc3c #becc3c #c2cc3c #c7cc3c #cccc3c #ccc73c #ccc23c #ccbe3c #ccb93c #ccb43c #ccaf3c #ccaa3c #cca63c #cca13c #cc9c3c #cc973c #cc923c #cc8e3c #cc893c #cc843c #cc7f3c #cc7a3c #cc763c #cc713c #cc6c3c #cc673c #cc623c #cc5e3c #cc593c #cc543c #cc4f3c #cc4a3c #cc463c #cc413c #cc3c3c'
-        ```
+    The `uptime` command provides averages at _1_, _5_ and _15_ minute intervals. You can define which of the three intervals to display by passing them as a space-separated list.
     
-    </details>
+    For example, passing `1m 15m` will display the _1_ and _15_ minute CPU load averages.
     
-    - <details><summary><code>tmux2k-cpu-icon-link-to</code>: The property name to link the CPU icon's color to, default: <em>empty</em></summary><br>
-        
-        When `tmux2k-cpu-gradient` is set, the CPU icon can be colored dynamically by linking it to one of this plugin's output values.
-        
-        | Property | Description
-        | -------- | -----------
-        | `usage` | Link color to the _usage_ value.
-        | `1m` | Link color to the _1 minute_ load average.
-        | `5m` | Link color to the _5 minute_ load average.
-        | `15m` | Link color to the _15 minute_ load average.
-        
-        ##### Examples
-        
-        ```bash
-        # Link icon color to the usage property
-        set -g @tmux2k-cpu-icon-link-to 'usage'
-        
-        # Link icon color to the 1 minute load average
-        set -g @tmux2k-cpu-icon-link-to '1m'
-        ```
-        
-        By allowing the icon color to represent a measurement of CPU time or usage, we can meaningfully display the plugin without the value its color represents:
-        
-        ```bash
-        set -g @tmux2k-cpu-display-usage 'false'
-        set -g @tmux2k-cpu-gradient 'onedark'
-        set -g @tmux2k-cpu-icon-link-to 'usage'
-        ```
-        
-    </details>
+    | Interval | Outputs
+    | -------- | -------
+    | `1m`     | Display load average taken over 1 minute.
+    | `5m`     | Display load average taken over 5 minutes.
+    | `15m`    | Display load average taken over 15 minutes.
+    
+</details>
+
+- <details><summary><code>tmux2k-cpu-gradient</code>: List of hex colors or a named gradient for dynamic color display, default: <em>empty</em></summary><br>
+    
+    This gradient is applied to the CPU plugin's output values, and optionally, its icon if `tmux2k-cpu-icon-link-to` is set.
+    
+    ![](./images/cpu-gradient-example.jpg)
+    
+    Each color in the gradient represents a percentage range, where each range is determined by the gradient's length, and the _value color_ is determined by which range the value falls into. This means that, given a 5-color gradient (5 ranges of 20%), a value of `25%` or `0.25` would apply color **2** of **5**.
+    
+    ##### Named Gradients
+    
+    > <picture>
+    >   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Mqxx/GitHub-Markdown/main/blockquotes/badge/light-theme/note.svg">
+    >   <img alt="Note" src="https://raw.githubusercontent.com/Mqxx/GitHub-Markdown/main/blockquotes/badge/dark-theme/note.svg">
+    > </picture><br>
+    >
+    > Gradient colors can be reversed by prepending a `!` to the gradient name, e.g.: `!gruvbox`
+    
+    | Gradient | Colors
+    | -------- | ------
+    | `catppuccin` \| `catppuccin-dark` | ![](./images/gradients/catppuccin.jpg) ![](./images/gradients/catppuccin-dark.jpg)
+    | `gruvbox` \| `gruvbox-dark` | ![](./images/gradients/gruvbox.jpg) ![](./images/gradients/gruvbox-dark.jpg)
+    | `monokai` \| `monokai-dark` | ![](./images/gradients/monokai.jpg) ![](./images/gradients/monokai-dark.jpg)
+    | `onedark` \| `onedark-dark` | ![](./images/gradients/onedark.jpg) ![](./images/gradients/onedark-dark.jpg)
+    | `heat` \| `heat-dark` | ![](./images/gradients/heat.jpg) ![](./images/gradients/heat-dark.jpg)
+    | `cosmic` \| `cosmic-dark` | ![](./images/gradients/cosmic.jpg) ![](./images/gradients/cosmic-dark.jpg)
+    
+    ##### Examples
+    
+    ```bash
+    # Color output values using a themed gradient:
+    set -g @tmux2k-cpu-gradient 'catppuccin'
+    
+    # Use reversed dark variant:
+    set -g @tmux2k-cpu-gradient '!catppuccin-dark'
+    
+    # Define a three-color gradient   R=0-32%   G=33-65%   B=66-100%
+    set -g @tmux2k-cpu-gradient      '#ff0000   #00ff00    #0000ff'
+    ```
+    
+    100 Color Gradient Example (_blue_ **→** _green_ **→** _red_)
+    
+    ```bash
+    set -g @tmux2k-cpu-gradient '#443ccc #3c3ccc #3c43cc #3c4acc #3c52cc #3c59cc #3c60cc #3c67cc #3c6ecc #3c76cc #3c7dcc #3c84cc #3c8bcc #3c8bcc #3c9acc #3ca1cc #3ca8cc #3cafcc #3cb6cc #3cbecc #3cc5cc #3ccccc #3cccc5 #3cccbe #3cccb6 #3cccaf #3ccca8 #3ccca1 #3ccc9a #3ccc92 #3ccc8b #3ccc84 #3ccc7d #3ccc76 #3ccc6e #3ccc67 #3ccc60 #3ccc59 #3ccc52 #3ccc4a #3ccc43 #3ccc3c #43cc3c #4acc3c #52cc3c #59cc3c #5ecc3c #62cc3c #67cc3c #6ccc3c #71cc3c #76cc3c #7acc3c #7fcc3c #84cc3c #89cc3c #8ecc3c #92cc3c #97cc3c #9ccc3c #a1cc3c #a6cc3c #aacc3c #afcc3c #b4cc3c #b9cc3c #becc3c #c2cc3c #c7cc3c #cccc3c #ccc73c #ccc23c #ccbe3c #ccb93c #ccb43c #ccaf3c #ccaa3c #cca63c #cca13c #cc9c3c #cc973c #cc923c #cc8e3c #cc893c #cc843c #cc7f3c #cc7a3c #cc763c #cc713c #cc6c3c #cc673c #cc623c #cc5e3c #cc593c #cc543c #cc4f3c #cc4a3c #cc463c #cc413c #cc3c3c'
+    ```
+
+</details>
+
+- <details><summary><code>tmux2k-cpu-icon-link-to</code>: The property name to link the CPU icon's color to, default: <em>empty</em></summary><br>
+    
+    When `tmux2k-cpu-gradient` is set, the CPU icon can be colored dynamically by linking it to one of this plugin's output values.
+    
+    | Property | Description
+    | -------- | -----------
+    | `usage` | Link color to the _usage_ value.
+    | `1m` | Link color to the _1 minute_ load average.
+    | `5m` | Link color to the _5 minute_ load average.
+    | `15m` | Link color to the _15 minute_ load average.
+    
+    ##### Examples
+    
+    ```bash
+    # Link icon color to the usage property
+    set -g @tmux2k-cpu-icon-link-to 'usage'
+    
+    # Link icon color to the 1 minute load average
+    set -g @tmux2k-cpu-icon-link-to '1m'
+    ```
+    
+    By allowing the icon color to represent a measurement of CPU time or usage, we can meaningfully display the plugin without the value its color represents:
+    
+    ```bash
+    set -g @tmux2k-cpu-display-usage 'false'
+    set -g @tmux2k-cpu-gradient 'onedark'
+    set -g @tmux2k-cpu-icon-link-to 'usage'
+    ```
+    
+</details>
 
 #### `cpu-temp`
 

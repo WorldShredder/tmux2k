@@ -16,8 +16,8 @@ cpu_usage_average="$(get_tmux_option '@tmux2k-cpu-usage-average')"
     source "$current_dir/../lib/color-utils.sh"
 
 get_cpu_usage() {
-    local cpu_show_decimal
-    cpu_show_decimal="$(get_tmux_option '@tmux2k-cpu-show-decimal' 'true')"
+    local cpu_usage_decimal
+    cpu_usage_decimal="$(get_tmux_option '@tmux2k-cpu-usage-decimal' 'true')"
 
     local percent=''
     case "$(uname -s)" in
@@ -65,7 +65,7 @@ get_cpu_usage() {
             tmux set -g '@tmux2k-cpu-linked-color' "$color"
     fi
 
-    if [ "$cpu_show_decimal" = 'true' ] ; then
+    if [ "$cpu_usage_decimal" = 'true' ] ; then
         output+="$(normalize_padding "${percent}%" 6)"
     else
         output+="$(normalize_padding "${percent%.*}%" 4)"
