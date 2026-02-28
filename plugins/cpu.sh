@@ -10,6 +10,7 @@ cpu_display_load="$(get_tmux_option '@tmux2k-cpu-display-load' 'false')"
 cpu_display_usage="$(get_tmux_option '@tmux2k-cpu-display-usage' 'true')"
 cpu_gradient="$(get_tmux_option '@tmux2k-cpu-gradient' '')"
 cpu_icon_link_to="$(get_tmux_option '@tmux2k-cpu-icon-link-to' '')"
+cpu_usage_average="$(get_tmux_option '@tmux2k-cpu-usage-average')"
 
 [ -n "$cpu_gradient" ] &&\
     source "$current_dir/../lib/color-utils.sh"
@@ -38,6 +39,22 @@ get_cpu_usage() {
 
     [ -z "$percent" ] &&\
         return
+
+    if [ "$cpu_usage_average" -gt '1' ] ; then
+        local -a cpu_usage_values=("$percent")
+        cpu_usage_values+=($(get_tmux_option '@tmux2k-cpu-usage-values'))
+
+        # We want to get average of n=cpu_usage_average values
+        [ "${#cpu_usage_values[@]}" -gt "$cpu_usage_average" ] &&\
+            cpu_usage_values=(${cpu_usage_values[@]:0:$cpu_usage_average})
+
+        cpu_usage_values="${cpu_usage_values[*]}"
+        percent="$(awk "BEGIN {
+            printf \"%.3g\", (${cpu_usage_values// /+}) / $cpu_usage_average
+        }")"
+
+        tmux set -g '@tmux2k-cpu-usage-values' "$cpu_usage_values"
+    fi
 
     local output=''
     if [ -n "$cpu_gradient" ] ; then
